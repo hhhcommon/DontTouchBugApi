@@ -42,13 +42,13 @@ public class AppDbSession {
 		cache.evict(token);
 
 		Map rec = dbService.queryRec(
-				"select * from so_app_session where token=?", token);
+				"select * from tb_app_session where token=?", token);
 		if (rec == null) {
 			return false;
 		}
 
 		dbService
-				.update("delete from so_app_session where id=?", rec.get("id"));
+				.update("delete from tb_app_session where id=?", rec.get("id"));
 		return true;
 	}
 
@@ -62,7 +62,7 @@ public class AppDbSession {
 
 		if (rec == null) {
 			logger.info("query db session");
-			rec = dbService.queryRec("select * from so_app_session where token=?", token);
+			rec = dbService.queryRec("select * from tb_app_session where token=?", token);
 			cache.put(token, rec);
 		}
 
@@ -70,14 +70,14 @@ public class AppDbSession {
 			return new Object[][] { { "code", 413 }, { "msg", "token不存在" } };
 
 		if (!(Boolean) rec.get("status")) {
-			dbService.update("delete from so_app_session where token=?", token);
+			dbService.update("delete from tb_app_session where token=?", token);
 			return toMap((String) rec.get("err_data"));
 		}
 
 		Date now = new Date();
 
 		if (now.getTime() > ((Date) rec.get("expire_time")).getTime()) {
-			dbService.update("delete from so_app_session where token=?", token);
+			dbService.update("delete from tb_app_session where token=?", token);
 			return new Object[][] { { "code", 411 }, { "msg", "token已过期" } };
 		}
 
@@ -88,7 +88,7 @@ public class AppDbSession {
 
 		dbService
 				.update(SqlUtil.buildUpdateSql(
-						"so_app_session",
+						"tb_app_session",
 						MapUtil.array2Map(new Object[][] {
 								{ "id", rec.get("id") },
 								{ "expire_time", rec.get("expire_time") },
@@ -99,9 +99,7 @@ public class AppDbSession {
 
 	}
 
-	public AppSessionBean create(HttpServletRequest request, String identifier) {
-		return create(request, identifier, "phone");
-	}
+
 
 	private Cache getCache() {
 		Cache cache = cacheManager.getCache(cacheName);
@@ -116,33 +114,31 @@ public class AppDbSession {
 		return cache;
 	}
 
-	public AppSessionBean create(HttpServletRequest request, String identifier,String identityType) {
+	public AppSessionBean create(HttpServletRequest request, String identifier) {
 
-		Map<String, Object> userAuthorized = dbService.queryRec("select * from so_user_authorized where identifier=?" +
-						" and identity_type=?",
-				identifier,identityType);
-		long userId = Long.parseLong(userAuthorized.get("user_id").toString());
+		Map<String, Object> user = dbService.queryRec("select id as user_id, openId, uuid from tb_user where openId=?",
+				identifier);
+		long userId = Long.parseLong(user.get("user_id").toString());
 
 
 		String token = UUID.randomUUID().toString().replaceAll("-", "");
-		String refreshToken = (String) userAuthorized.get("uuid");
+		String refreshToken = (String) user.get("uuid");
 
 		Map session = MapUtil.array2Map(new Object[][] {
 				{
 						"front",
 						new Object[][] { { "userId", userId },
-								{ "token", token },
-								{ "refreshToken", refreshToken } } },
-				{ "userData", userAuthorized } });
+								{ "token", token } } },
+				{ "userData", user } });
 
 		Map oSession = dbService
-				.queryRec("select * from so_app_session where user_id="
+				.queryRec("select * from tb_app_session where user_id="
 						+ userId + " order by id desc limit 1");
 		if (oSession != null) {
 			getCache().evict(oSession.get("token"));
 			dbService
 					.update(SqlUtil.buildUpdateSql(
-							"so_app_session",
+							"tb_app_session",
 							MapUtil.array2Map(new Object[][] {
 									{ "id", oSession.get("id") },
 									{ "status", 0 },
@@ -157,13 +153,12 @@ public class AppDbSession {
 
 		Date now = new Date();
 		dbService.insert(SqlUtil.buildInsertSqlMap(
-				"so_app_session",
+				"tb_app_session",
 				new Object[][] { { "token", token },
 						{ "refresh_token", refreshToken },
 						{ "user_id", userId },
 						{ "expire_time", DateUtil.dateAddMins(now, liveMin) },
 						{ "last_access_time", now }, { "status", 1 },
-						{ "login_type", identityType },
 						{ "session", JsonUtil.toString(session) } }));
 
 		return new AppSessionBean(session);
@@ -172,7 +167,7 @@ public class AppDbSession {
 
 	public Map<String, Object> getUserData(String token) {
 		Map rec = dbService
-				.queryRec("select session from so_app_session where token='"
+				.queryRec("select session from tb_app_session where token='"
 						+ token + "'");
 		return toMap((String) rec.get("session"));
 	}
@@ -180,14 +175,14 @@ public class AppDbSession {
 	public Object autoLogin(HttpServletRequest request, String refreshToken) {
 
 		Map rec = dbService.queryRec(
-				"select login_name from cl_user where uuid=?", refreshToken);
+				"select openId from tb_user where uuid=?", refreshToken);
 		if (rec == null) {
 			return new Object[][] { { "success", false },
 					{ "msg", "refreshToken不存在" } };
 		}
-		String loginname = (String) rec.get("login_name");
+		String openId = (String) rec.get("openId");
 
-		AppSessionBean sessionBean = create(request, loginname, "phone");
+		AppSessionBean sessionBean = create(request, openId);
 
 		return sessionBean;
 

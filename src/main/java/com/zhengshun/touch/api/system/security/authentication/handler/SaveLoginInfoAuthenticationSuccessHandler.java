@@ -63,13 +63,13 @@ public class SaveLoginInfoAuthenticationSuccessHandler extends SimpleUrlAuthenti
 				context.put(Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE);
 				context.put(Constant.RESPONSE_CODE_MSG, "登录成功");
 				ServletUtils.writeToResponse(response, context);
-				List<SysRole> roleList = sysRoleService.getRoleListByUserId(op.getId());
-				List<Long> roleIdList = new ArrayList<Long>();
-				// 转换用户的角色为用户授权, 并记录用户角色Id列表
-				for (SysRole role : roleList) {
-					roleIdList.add(role.getId());
-				}
-				session.setAttribute("roleList", roleIdList);
+//				List<SysRole> roleList = sysRoleService.getRoleListByUserId(op.getId());
+//				List<Long> roleIdList = new ArrayList<Long>();
+//				// 转换用户的角色为用户授权, 并记录用户角色Id列表
+//				for (SysRole role : roleList) {
+//					roleIdList.add(role.getId());
+//				}
+//				session.setAttribute("roleList", roleIdList);
 				super.onAuthenticationSuccess(request, response, authentication);
 			} else { //登录失败 
 				Map<Object, Object> context = new HashMap<Object, Object>();

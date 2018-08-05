@@ -183,6 +183,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/modules/manage/**/*"/>
+			<mvc:mapping path="/api/act/**/*"/>
 			<bean class="com.zhengshun.touch.api.interceptor.ApiInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>

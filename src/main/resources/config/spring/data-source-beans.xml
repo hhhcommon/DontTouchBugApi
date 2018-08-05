@@ -94,6 +94,7 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="mapperLocations">
 			<list>
+				<value>classpath*:/config/mappers/system/*.xml</value>
 				<value>classpath*:/config/mappers/*.xml</value>
 			</list>
 		</property>

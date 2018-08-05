@@ -117,7 +117,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 		if (uri.contains("/act/")) {
 			if (StringUtil.isEmpty(token) ) {//|| StringUtil.isEmpty(signMsg)
 				rec.put("code", 400);
-				rec.put("msg", "没有token或signMsg");
+				rec.put("msg", "没有token");
 				JsonUtil.writeJson(rec, response);
 				return false;
 			}
