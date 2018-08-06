@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface TbCodeInfoService extends BaseService<TbCodeInfo, Long> {
 
-    Boolean saveCodeInfo (String content, BigDecimal score, Integer time, Integer isBug, Integer difficult);
+    Boolean saveCodeInfo (String content, BigDecimal score, Integer time, Integer isBug, Integer difficult, Integer gameTypeId);
 
     Page<TbCodeInfo> page(Map<String, Object> params, int currentPage, int pageSize);
 
