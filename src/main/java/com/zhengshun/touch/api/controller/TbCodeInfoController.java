@@ -38,11 +38,12 @@ public class TbCodeInfoController extends BaseController {
             @RequestParam( value = "score") BigDecimal score,
             @RequestParam( value = "time") Integer time,
             @RequestParam( value = "isBug") Integer isBug,
-            @RequestParam( value = "difficult") Integer difficult)
+            @RequestParam( value = "difficult") Integer difficult,
+            @RequestParam( value = "gameTypeId") Integer gameTypeId)
             throws Exception {
-        logger.info( "【manage/code/info/save.htm】【inputs】 content = " + content + ", score = " + score + ", time = " + time + ", isBug = " + isBug + ", difficult = " + difficult);
+        logger.info( "【manage/code/info/save.htm】【inputs】 content = " + content + ", score = " + score + ", time = " + time + ", isBug = " + isBug + ", difficult = " + difficult + ", gameTypeId = " + gameTypeId);
 
-        if (tbCodeInfoService.saveCodeInfo( content, score, time, isBug, difficult )) {
+        if (tbCodeInfoService.saveCodeInfo( content, score, time, isBug, difficult, gameTypeId )) {
             logger.info("【manage/code/info/save.htm】【outputs】 操作成功");
             ServletUtils.writeToResponse(response, BaseResponse.success());
         } else {

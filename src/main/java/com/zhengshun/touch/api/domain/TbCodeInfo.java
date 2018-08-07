@@ -69,6 +69,8 @@ public class TbCodeInfo implements Serializable{
      */
     private Date updateDate;
 
+    private Integer gameTypeId;
+
     public Integer getId() {
         return id;
     }
@@ -148,5 +150,13 @@ public class TbCodeInfo implements Serializable{
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Integer getGameTypeId() {
+        return gameTypeId;
+    }
+
+    public void setGameTypeId(Integer gameTypeId) {
+        this.gameTypeId = gameTypeId;
     }
 }

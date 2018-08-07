@@ -26,7 +26,7 @@ public class TbCodeInfoServiceImp extends BaseServiceImpl<TbCodeInfo, Long> impl
     }
 
     @Override
-    public Boolean saveCodeInfo(String content, BigDecimal score, Integer time, Integer isBug, Integer difficult) {
+    public Boolean saveCodeInfo(String content, BigDecimal score, Integer time, Integer isBug, Integer difficult, Integer gameTypeId) {
         TbCodeInfo tbCodeInfo = new TbCodeInfo();
         tbCodeInfo.setContent( content );
         tbCodeInfo.setScore( score );
@@ -34,7 +34,7 @@ public class TbCodeInfoServiceImp extends BaseServiceImpl<TbCodeInfo, Long> impl
         tbCodeInfo.setIsBug( isBug );
         tbCodeInfo.setDifficult( difficult );
         tbCodeInfo.setCreateDate( new Date() );
-
+        tbCodeInfo.setGameTypeId( gameTypeId );
         int res = tbCodeInfoMapper.insert( tbCodeInfo );
         if ( res > 0 ) {
             return true;
