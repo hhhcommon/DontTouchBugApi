@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -33,16 +34,20 @@ public class TbUserController extends BaseController {
             @RequestParam( value = "gender") Integer gender,
             @RequestParam( value = "language") String language,
             @RequestParam( value = "nickName") String nickName,
-            @RequestParam( value = "openId") String openId,
+            @RequestParam( value = "rdSessionKey") String rdSessionKey,
             @RequestParam( value = "province") String province)
             throws Exception {
         logger.info( "【/api/user/saveUser.htm】【inputs】 avatarUrl = " + avatarUrl + ", city = " + city + ", country = " + country + ", gender = " + gender + ", language = " + language
-         + ", nickName = " + nickName + ", openId = " + openId + ", province = " + province);
-
-        Map<String, Object> result = tbUserService.saveUser( request, avatarUrl, city, country, gender, language, nickName, openId, province );
-        logger.info("【/manage/code/info/page.htm】【outputs】  ," + ConvertUtils.convert(
-                result));
-        ServletUtils.writeToResponse(response, result);
+         + ", nickName = " + nickName + ", rdSessionKey = " + rdSessionKey + ", province = " + province);
+        Map<String, Object> result = new HashMap<>();
+        if (tbUserService.saveUser( request, avatarUrl, city, country, gender, language, nickName, rdSessionKey,
+                province )){
+            logger.info("【/api/user/saveUser.htm】【outputs】 操作成功");
+            ServletUtils.writeToResponse(response, BaseResponse.success());
+        } else {
+            logger.info("【/api/user/saveUser.htm】【outputs】 操作失败");
+            ServletUtils.writeToResponse( response, BaseResponse.fail() );
+        }
 
 
     }
