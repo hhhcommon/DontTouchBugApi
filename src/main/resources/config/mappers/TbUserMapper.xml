@@ -21,6 +21,8 @@
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
         <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
         <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+        <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
+        <result column="rd_session_key" jdbcType="VARCHAR" property="rdSessionKey" />
     </resultMap>
     
     <sql id="Base_Column_List">
@@ -39,6 +41,9 @@
             </if>
             <if test="openId !=null">
                 and openId = #{openId}
+            </if>
+            <if test="rdSessionKey !=null">
+                and rd_session_key = #{rdSessionKey}
             </if>
         </trim>
     </sql>
@@ -91,6 +96,12 @@
             <if test="uuid != null">
                 uuid,
             </if>
+            <if test="sessionKey != null">
+                session_key,
+            </if>
+            <if test="rdSessionKey != null">
+                rd_session_key,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="avatarUrl != null">
@@ -131,6 +142,12 @@
             </if>
             <if test="uuid != null">
                 #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionKey != null">
+                #{sessionKey,jdbcType=VARCHAR},
+            </if>
+            <if test="rdSessionKey != null">
+                #{rdSessionKey,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

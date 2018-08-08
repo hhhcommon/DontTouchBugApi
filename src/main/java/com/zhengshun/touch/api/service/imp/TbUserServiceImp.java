@@ -27,7 +27,8 @@ public class TbUserServiceImp extends BaseServiceImpl<TbUser, Long> implements T
     }
 
     @Override
-    public Map<String, Object> saveUser(HttpServletRequest request, String avatarUrl, String city, String country, Integer gender, String language, String nickName, String openId, String province) {
+    public Boolean saveUser(HttpServletRequest request, String avatarUrl, String city, String country, Integer gender,
+                      String language, String nickName, String rdSessionKey, String province) {
         Map<String, Object> retMap = new HashMap<>();
 
         TbUser tbUser1 = new TbUser();
@@ -37,11 +38,11 @@ public class TbUserServiceImp extends BaseServiceImpl<TbUser, Long> implements T
         tbUser1.setGender( gender );
         tbUser1.setLanguage( language );
         tbUser1.setNickName( nickName );
-        tbUser1.setOpenId( openId );
         tbUser1.setProvince( province );
         tbUser1.setCreateDate( new Date() );
         Map<String, Object> params = new HashMap<>();
-        params.put("openId", openId );
+
+        params.put("rdSessionKey", rdSessionKey );
         TbUser tbUser = tbUserMapper.findSelective(params);
 
         if ( tbUser != null ) {
@@ -53,11 +54,7 @@ public class TbUserServiceImp extends BaseServiceImpl<TbUser, Long> implements T
             tbUserMapper.insert( tbUser1 );
         }
 
-        AppSessionBean session = appDbSession.create(request, openId);
-        retMap.put("success", true);
-        retMap.put("msg", "登录成功");
-        retMap.put("data", session.getFront());
 
-        return retMap;
+        return true;
     }
 }

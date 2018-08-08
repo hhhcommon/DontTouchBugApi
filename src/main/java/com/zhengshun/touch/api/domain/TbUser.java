@@ -87,6 +87,10 @@ public class TbUser implements Serializable{
      */
     private Date updateDate;
 
+    private String sessionKey;
+
+    private String rdSessionKey;
+
     private String uuid;
 
     public Long getId() {
@@ -97,13 +101,6 @@ public class TbUser implements Serializable{
         this.id = id;
     }
 
-    public String getAvataUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl == null ? null : avatarUrl.trim();
-    }
 
     public String getCity() {
         return city;
@@ -169,13 +166,6 @@ public class TbUser implements Serializable{
         this.status = status;
     }
 
-    public Integer getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDelete_flag(Integer delete_flag) {
-        this.deleteFlag = delete_flag;
-    }
 
     public Date getCreateDate() {
         return createDate;
@@ -199,5 +189,37 @@ public class TbUser implements Serializable{
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public String getRdSessionKey() {
+        return rdSessionKey;
+    }
+
+    public void setRdSessionKey(String rdSessionKey) {
+        this.rdSessionKey = rdSessionKey;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public Integer getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(Integer deleteFlag) {
+        this.deleteFlag = deleteFlag;
     }
 }
