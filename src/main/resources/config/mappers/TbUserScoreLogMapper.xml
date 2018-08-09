@@ -12,6 +12,7 @@
         <result column="score" jdbcType="DECIMAL" property="score" />
         <result column="time" jdbcType="INTEGER" property="time" />
         <result column="game_type_id" jdbcType="INTEGER" property="gameTypeId" />
+        <result column="difficut" jdbcType="INTEGER" property="difficut" />
         <result column="status" jdbcType="INTEGER" property="status" />
         <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -48,6 +49,9 @@
             <if test="gameTypeId != null">
                 game_type_id,
             </if>
+            <if test="difficut != null">
+                difficut,
+            </if>
             <if test="status != null">
                 status,
             </if>
@@ -71,6 +75,9 @@
             <if test="time != null">
                 #{time,jdbcType=INTEGER},
             </if>
+            <if test="difficut != null">
+                #{difficut,jdbcType=INTEGER},
+            </if>
             <if test="gameTypeId != null">
                 #{gameTypeId,jdbcType=INTEGER},
             </if>
@@ -86,6 +93,7 @@
             <if test="updateDate != null">
                 #{updateDate,jdbcType=TIMESTAMP},
             </if>
+
         </trim>
     </insert>
     

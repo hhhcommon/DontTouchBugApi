@@ -17,6 +17,8 @@ public class TbUserScoreLog implements Serializable {
 
     private Long userId;
 
+    private Integer difficut;
+
     /**
      * Database Column Remarks:
      *   分值
@@ -126,5 +128,13 @@ public class TbUserScoreLog implements Serializable {
 
     public void setGameTypeId(Integer gameTypeId) {
         this.gameTypeId = gameTypeId;
+    }
+
+    public Integer getDifficut() {
+        return difficut;
+    }
+
+    public void setDifficut(Integer difficut) {
+        this.difficut = difficut;
     }
 }
