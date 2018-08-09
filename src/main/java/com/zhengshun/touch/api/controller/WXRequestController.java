@@ -24,13 +24,11 @@ public class WXRequestController extends BaseController {
 
     @RequestMapping( value = "/api/wx/getOpenId.htm" )
     public void queryOpenId (
-            @RequestParam( value = "code") String code,
-            @RequestParam( value = "appid") String appid,
-            @RequestParam( value = "secret") String secret)
+            @RequestParam( value = "code") String code)
             throws Exception {
-        logger.info( "【/api/wx/getOpenId.htm】【inputs】 code = " + code + ", appid = " + appid + ", secret = " + secret );
+        logger.info( "【/api/wx/getOpenId.htm】【inputs】 code = " + code );
 
-        Map<String, String> result = wxRequestService.getOpenId( appid, secret, code );
+        Map<String, String> result = wxRequestService.getOpenId(  code );
 
         logger.info("【/api/wx/getOpenId.htm】【outputs】  ," + ConvertUtils.convert(
                 result));

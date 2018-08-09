@@ -50,6 +50,7 @@ public class TbUserServiceImp extends BaseServiceImpl<TbUser, Long> implements T
             tbUserMapper.update( tbUser1 );
         } else {
             String uuid = UUID.randomUUID().toString().replaceAll( "-", "" );
+            tbUser1.setRdSessionKey( rdSessionKey );
             tbUser1.setUuid( uuid );
             tbUserMapper.insert( tbUser1 );
         }

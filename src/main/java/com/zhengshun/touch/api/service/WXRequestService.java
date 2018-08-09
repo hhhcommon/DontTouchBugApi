@@ -8,11 +8,9 @@ public interface WXRequestService {
     /**
      * 获取openid sessionkey
      * @param appid
-     * @param secret
-     * @param code
      * @return
      */
-    Map<String, String> getOpenId(String appid, String secret, String code );
+    Map<String, String> getOpenId(String appid );
 
 
 }

@@ -195,6 +195,9 @@
             <if test="updateDate != null">
                 update_date = #{updateDate,jdbcType=TIMESTAMP},
             </if>
+            <if test="rdSessionKey != null">
+                rd_session_key = #{rdSessionKey,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>

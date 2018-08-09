@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,11 +26,11 @@ public class WxRequestServiceImp  implements WXRequestService {
     private TbUserMapper tbUserMapper;
 
     @Override
-    public Map<String, String> getOpenId(String appid, String secret, String code) {
+    public Map<String, String> getOpenId( String code) {
 
         Map<String, String> params = new HashMap<>();
-        params.put("appid", appid );
-        params.put("secret", secret );
+        params.put("appid", "wx78741ebb07a97411" );
+        params.put("secret", "24640dbeeed1cd07f48509c239d856a1" );
         params.put("js_code", code );
         params.put("grant_type", "authorization_code");
 
@@ -54,6 +55,7 @@ public class WxRequestServiceImp  implements WXRequestService {
             tbUserMapper.update( tbUser );
             logger.info("【WXRequestService】【getOpenId】【修改用户rdSessionKey】");
         } else {
+            tbUser.setCreateDate( new Date() );
             tbUserMapper.insert( tbUser );
             logger.info("【WXRequestService】【getOpenId】【插入用户rdSessionKey】");
         }
