@@ -21,20 +21,20 @@ public class TbUserScoreLogController extends BaseController {
     @Resource
     private TbUserScoreLogService tbUserScoreLogService;
 
-    @RequestMapping( value = "/api/act/user/score/save.htm" )
+    @RequestMapping( value = "/api/user/score/save.htm" )
     public void saveUser (
             @RequestParam( value = "rdSessionKey") String rdSessionKey,
             @RequestParam( value = "score") BigDecimal score,
             @RequestParam( value = "time") Integer time,
             @RequestParam( value = "difficut") Integer difficut)
             throws Exception {
-        logger.info( "【/api/act/user/score/save.htm】【inputs】 userId = " + rdSessionKey + ", score = " + score + ", difficut = " + difficut);
+        logger.info( "【/api/user/score/save.htm】【inputs】 userId = " + rdSessionKey + ", score = " + score + ", difficut = " + difficut);
 
         if (tbUserScoreLogService.saveUserScore( rdSessionKey, score, time, difficut)) {
-            logger.info("【/api/act/user/score/save.htm】【outputs】 rdSessionKey = " + rdSessionKey + " 操作成功");
+            logger.info("【/api/user/score/save.htm】【outputs】 rdSessionKey = " + rdSessionKey + " 操作成功");
             ServletUtils.writeToResponse(response, BaseResponse.success());
         } else {
-            logger.info("【/api/act/user/score/save.htm】【outputs】 rdSessionKey = " + rdSessionKey + " 操作失败");
+            logger.info("【/api/user/score/save.htm】【outputs】 rdSessionKey = " + rdSessionKey + " 操作失败");
             ServletUtils.writeToResponse( response, BaseResponse.fail() );
         }
 

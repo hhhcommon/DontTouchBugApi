@@ -28,6 +28,8 @@ public class BuriedPoint {
     @Field(value="data")
     private String data;
 
+    @Field(value="sub")
+    private String sub;
     /**
      * 点击时间
      */
@@ -132,5 +134,13 @@ public class BuriedPoint {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getSub() {
+        return sub;
+    }
+
+    public void setSub(String sub) {
+        this.sub = sub;
     }
 }

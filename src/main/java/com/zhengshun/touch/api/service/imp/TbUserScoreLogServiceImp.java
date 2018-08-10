@@ -1,6 +1,5 @@
 package com.zhengshun.touch.api.service.imp;
 
-import com.oracle.tools.packager.mac.MacAppBundler;
 import com.zhengshun.touch.api.common.mapper.BaseMapper;
 import com.zhengshun.touch.api.common.service.impl.BaseServiceImpl;
 import com.zhengshun.touch.api.domain.TbUser;
