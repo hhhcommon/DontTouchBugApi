@@ -49,5 +49,5 @@
 			</list>
 		</property>
 	</bean>
-	
+	<import resource="mongo-bean.xml"/>
 </beans>

@@ -182,6 +182,11 @@
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.3.2" />
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.1" />
           <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
+          <element id="library" level="project" name="Maven: org.mongodb:mongo-java-driver:3.2.2" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-commons-core:1.4.1.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-commons:1.13.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-mongodb:1.10.4.RELEASE" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.0.1" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="DontTouchBugApi/web/Web" />

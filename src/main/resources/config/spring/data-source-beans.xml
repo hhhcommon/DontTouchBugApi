@@ -15,6 +15,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:/config/server.properties</value>
+				<value>classpath:/config/mongodb.properties</value>
 			</list>
 		</property>
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
