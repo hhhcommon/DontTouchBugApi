@@ -7,5 +7,5 @@ import java.math.BigDecimal;
 
 public interface TbUserScoreLogService extends BaseService<TbUserScoreLog, Long> {
 
-    Boolean saveUserScore(Long userId, BigDecimal score, Integer time, Integer gameTypeId);
+    Boolean saveUserScore(String rdSessionKey, BigDecimal score, Integer time, Integer difficut);
 }
