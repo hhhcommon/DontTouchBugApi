@@ -2,11 +2,12 @@ package com.zhengshun.touch.api.common.util;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.apache.batik.dom.util.HashTable;
 import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
+import java.util.*;
 
 
 public class MongoDBUtils {
@@ -69,6 +70,14 @@ public class MongoDBUtils {
             } else if (param instanceof Date) {
                 Date value = (Date) param;
                 dbObject.put(varName, value);
+            } else if ( param instanceof Hashtable) {
+                Hashtable<String, String> hashtable = (Hashtable<String, String>) param;
+                ((BasicDBObject) dbObject).put(varName, hashtable);
+
+            }else if ( param instanceof Map) {
+                Map<String, String> map = (Map<String, String>) param;
+                ((BasicDBObject) dbObject).put(varName, map);
+
             }
             // 恢复访问控制权限
             field.setAccessible(accessFlag);

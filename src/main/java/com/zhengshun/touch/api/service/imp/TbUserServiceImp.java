@@ -33,13 +33,12 @@ public class TbUserServiceImp extends BaseServiceImpl<TbUser, Long> implements T
 
         TbUser tbUser1 = new TbUser();
         tbUser1.setAvatarUrl( avatarUrl );
+        tbUser1.setNickName( nickName );
+        tbUser1.setProvince( province );
         tbUser1.setCity( city );
         tbUser1.setCountry( country );
         tbUser1.setGender( gender );
         tbUser1.setLanguage( language );
-        tbUser1.setNickName( nickName );
-        tbUser1.setProvince( province );
-        tbUser1.setCreateDate( new Date() );
         Map<String, Object> params = new HashMap<>();
 
         params.put("rdSessionKey", rdSessionKey );
@@ -50,6 +49,8 @@ public class TbUserServiceImp extends BaseServiceImpl<TbUser, Long> implements T
             tbUserMapper.update( tbUser1 );
         } else {
             String uuid = UUID.randomUUID().toString().replaceAll( "-", "" );
+
+            tbUser1.setCreateDate( new Date() );
             tbUser1.setRdSessionKey( rdSessionKey );
             tbUser1.setUuid( uuid );
             tbUserMapper.insert( tbUser1 );

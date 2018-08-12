@@ -1,6 +1,7 @@
 package com.zhengshun.touch.api.service;
 
 
+import org.apache.batik.dom.util.HashTable;
 
 /**
  * name: zhangyan

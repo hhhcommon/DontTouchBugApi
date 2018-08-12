@@ -1,16 +1,20 @@
 package com.zhengshun.touch.api.domain;
 
+import org.apache.batik.dom.util.HashTable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * 埋点
  */
 
 @Document(collection="buried_point")
-public class BuriedPoint {
+public class BuriedPoint implements Serializable {
 
     @Field(value="id")
     private Long id;
@@ -26,7 +30,7 @@ public class BuriedPoint {
 
 
     @Field(value="data")
-    private String data;
+    private Map<String, String> data;
 
     @Field(value="sub")
     private String sub;
@@ -128,11 +132,11 @@ public class BuriedPoint {
         this.key = key;
     }
 
-    public String getData() {
+    public Map<String, String> getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Map<String, String> data) {
         this.data = data;
     }
 

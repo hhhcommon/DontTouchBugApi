@@ -2,6 +2,8 @@
 package com.zhengshun.touch.api.service.imp;
 
 
+import com.alibaba.fastjson.JSONObject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
@@ -10,14 +12,18 @@ import com.zhengshun.touch.api.domain.BuriedPoint;
 import com.zhengshun.touch.api.domain.TbUser;
 import com.zhengshun.touch.api.mapper.TbUserMapper;
 import com.zhengshun.touch.api.service.BuriedPointMongoService;
+import org.apache.batik.dom.util.HashTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 
@@ -49,7 +55,7 @@ public class BuriedPointMongoServiceImpl implements BuriedPointMongoService {
             buriedPoint.setUserId( tbUser.getId() );
             buriedPoint.setAppId( appId );
             buriedPoint.setKey( key );
-            buriedPoint.setData( data );
+//            buriedPoint.setData( data );
             buriedPoint.setTimestamp( new Date( timestamp ));
             buriedPoint.setCreateDate( new Date());
             buriedPoint.setStatus( 1 );
@@ -57,6 +63,11 @@ public class BuriedPointMongoServiceImpl implements BuriedPointMongoService {
             buriedPoint.setUpdateDate( new Date() );
             buriedPoint.setSub( sub );
 
+            JSONObject jsonObject = JSONObject.parseObject( data );
+            Map<String,String> map = (Map)jsonObject;
+
+
+            buriedPoint.setData(map);
             DBCollection collection = this.mongoTemplate.getCollection(COLLECTION_NAME);
             int result = 0;
             DBObject iteminfoObj = MongoDBUtils.bean2DBObject(buriedPoint);

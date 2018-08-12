@@ -5,6 +5,7 @@ import com.zhengshun.touch.api.common.context.Constant;
 import com.zhengshun.touch.api.common.util.ServletUtils;
 import com.zhengshun.touch.api.common.web.controller.BaseController;
 import com.zhengshun.touch.api.service.BuriedPointMongoService;
+import org.apache.batik.dom.util.HashTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -34,7 +35,7 @@ public class BuriedPointController extends BaseController{
      */
     @RequestMapping(value = "/api/buriedPoint/add.htm", method = RequestMethod.POST)
     public void page(
-            @RequestParam(value="appId") String appId,
+                @RequestParam(value="appId") String appId,
             @RequestParam(value="key") String key,
             @RequestParam(value = "data") String data,
             @RequestParam(value = "rdSessionKey") String rdSessionKey,

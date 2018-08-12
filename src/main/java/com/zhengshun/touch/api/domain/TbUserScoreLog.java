@@ -19,6 +19,8 @@ public class TbUserScoreLog implements Serializable {
 
     private Integer difficut;
 
+    private  String steps;
+
     /**
      * Database Column Remarks:
      *   分值
@@ -136,5 +138,13 @@ public class TbUserScoreLog implements Serializable {
 
     public void setDifficut(Integer difficut) {
         this.difficut = difficut;
+    }
+
+    public String getSteps() {
+        return steps;
+    }
+
+    public void setSteps(String steps) {
+        this.steps = steps;
     }
 }
