@@ -55,7 +55,6 @@ public class BuriedPointMongoServiceImpl implements BuriedPointMongoService {
             buriedPoint.setUserId( tbUser.getId() );
             buriedPoint.setAppId( appId );
             buriedPoint.setKey( key );
-//            buriedPoint.setData( data );
             buriedPoint.setTimestamp( new Date( timestamp ));
             buriedPoint.setCreateDate( new Date());
             buriedPoint.setStatus( 1 );
@@ -74,10 +73,8 @@ public class BuriedPointMongoServiceImpl implements BuriedPointMongoService {
 
             WriteResult writeResult = collection.save(iteminfoObj);
             result = writeResult.getN();
-            logger.info("埋点写入成功");
             return result;
         } else {
-            logger.info("tbUser 为空, 埋点写入失败");
             return 1;
         }
 

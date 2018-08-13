@@ -1,12 +1,9 @@
 package com.zhengshun.touch.api.controller;
 
 import com.zhengshun.touch.api.common.BaseResponse;
-import com.zhengshun.touch.api.common.context.Constant;
 import com.zhengshun.touch.api.common.util.ServletUtils;
 import com.zhengshun.touch.api.common.web.controller.BaseController;
 import com.zhengshun.touch.api.service.TbUserService;
-import com.zhengshun.touch.api.user.service.DBService;
-import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class TbUserController extends BaseController {
@@ -39,7 +34,6 @@ public class TbUserController extends BaseController {
             throws Exception {
         logger.info( "【/api/user/saveUser.htm】【inputs】 avatarUrl = " + avatarUrl + ", city = " + city + ", country = " + country + ", gender = " + gender + ", language = " + language
          + ", nickName = " + nickName + ", rdSessionKey = " + rdSessionKey + ", province = " + province);
-        Map<String, Object> result = new HashMap<>();
         if (tbUserService.saveUser( request, avatarUrl, city, country, gender, language, nickName, rdSessionKey,
                 province )){
             logger.info("【/api/user/saveUser.htm】【outputs】 操作成功");

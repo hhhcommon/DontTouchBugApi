@@ -166,12 +166,11 @@ public class TbUser implements Serializable{
         this.status = status;
     }
 
-
     public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date create_date) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 

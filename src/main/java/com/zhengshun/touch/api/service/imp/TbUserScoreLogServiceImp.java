@@ -8,7 +8,10 @@ import com.zhengshun.touch.api.mapper.TbUserScoreLogMapper;
 import com.zhengshun.touch.api.domain.TbUserScoreLog;
 import com.zhengshun.touch.api.service.TbUserScoreLogService;
 import groovy.lang.Lazy;
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +25,7 @@ import java.util.*;
 @org.springframework.context.annotation.Lazy(true)
 @Service
 public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Long> implements TbUserScoreLogService {
+    public static final Logger logger = LoggerFactory.getLogger(TbUserScoreLogServiceImp.class);
     @Autowired
     private TbUserScoreLogMapper tbUserScoreLogMapper;
     @Autowired
@@ -47,6 +51,7 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
         params.put("rdSessionKey", rdSessionKey );
         TbUser tbUser = tbUserMapper.findSelective(params);
         if ( tbUser != null ) {
+
             tbUserScoreLog.setUserId( tbUser.getId() );
             String redisScore = redisTemplate.opsForValue().get( tbUser.getId() + "" ) + "";
             Map<String, Object> paramRedis = new HashMap<>();
@@ -66,39 +71,29 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
                     reparam.put("nickName", nickName );
                     reparam.put("avatarUrl", avatarUrl );
                     reparam.put("score", redisScore );
-                    System.out.println(JSONObject.fromObject(reparam).toString());
+                    logger.info("【TbUserScoreLogServiceImp】【saveUserScore】 当前用户缓存值 : " + com.alibaba.fastjson.JSONObject.toJSON( reparam ));
+                    logger.info("【TbUserScoreLogServiceImp】【saveUserScore】 当前得分大于缓存得分， 清楚缓存得分 start userId = " +
+                            tbUser.getId());
                     redisTemplate.opsForZSet().remove("scorerank", JSONObject.fromObject(reparam).toString() );
-                    System.out.println("删除陈宫");
+                    logger.info("【TbUserScoreLogServiceImp】【saveUserScore】 当前得分大于缓存得分， 清楚缓存得分 end userId = " +
+                            tbUser.getId());
+
                     redisTemplate.opsForValue().set(tbUser.getId() + "", score + "" );
-                    if (!nickName.equals(tbUser.getNickName())){
-                        redisTemplate.opsForValue().set(tbUser.getId() +"nickName", tbUser.getNickName());
-                    }
-                    if (!avatarUrl.equals(tbUser.getAvatarUrl())){
-                        redisTemplate.opsForValue().set(tbUser.getId() +"avatarUrl", tbUser.getAvatarUrl());
-                    }
                     redisTemplate.opsForZSet().add("scorerank", JSONObject.fromObject(paramRedis).toString(), score.doubleValue() );
-                    System.out.println("插入成功");
                 }
+
             } else {
                 redisTemplate.opsForValue().set(tbUser.getId() + "", score + "" );
-                redisTemplate.opsForValue().set(tbUser.getId() +"nickName", tbUser.getNickName());
-                redisTemplate.opsForValue().set(tbUser.getId() +"avatarUrl", tbUser.getAvatarUrl());
-                redisTemplate.opsForZSet().add("scorerank", tuples );
+                redisTemplate.opsForZSet().add("scorerank", JSONObject.fromObject(paramRedis).toString(), score.doubleValue() );
             }
-            System.out.println("redis插入成功" + redisTemplate.opsForValue().get( tbUser.getId() + "" ));
-            Set<ZSetOperations.TypedTuple<Object>> tuples1 = redisTemplate.opsForZSet().rangeWithScores("scorerank",0,-1);
-            Iterator<ZSetOperations.TypedTuple<Object>> iterator = tuples1.iterator();
-            while (iterator.hasNext())
-            {
-                ZSetOperations.TypedTuple<Object> typedTuple = iterator.next();
-                System.out.println("value:" + typedTuple.getValue() + "score:" + typedTuple.getScore());
-            }
-
-
+            redisTemplate.opsForValue().set(tbUser.getId() +"nickName", tbUser.getNickName());
+            redisTemplate.opsForValue().set(tbUser.getId() +"avatarUrl", tbUser.getAvatarUrl());
             int res = tbUserScoreLogMapper.insert( tbUserScoreLog );
             if ( res > 0 ) {
                 return true;
             }
+        } else {
+            logger.info("【TbUserScoreLogServiceImp】【saveUserScore】 没有找到该rdSessionKey下的用户信息， rdSessionKey = " + rdSessionKey);
         }
 
         return false;
@@ -106,7 +101,7 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
 
     @Override
     public Map<String, Object> getRank(String rdSessionKey) {
-        System.out.println("取出："+redisTemplate.opsForZSet().reverseRange("scorerank", 0, 20));
+        logger.info("【TbUserScoreLogServiceImp】【getRank】 当前排行 : " + redisTemplate.opsForZSet().reverseRange("scorerank", 0, 20));
         Map<String, Object> params = new HashMap<>();
         params.put("rdSessionKey", rdSessionKey );
         TbUser tbUser = tbUserMapper.findSelective(params);
@@ -114,17 +109,13 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
             Set<Object> tuples1 = redisTemplate.opsForZSet().reverseRange("scorerank",0,20);
             Iterator<Object> iterator = tuples1.iterator();
             int i = 1;
-
             Map<String, Object> param = new HashMap<>();
             while (iterator.hasNext())
             {
                 Object object  = iterator.next();
                 param.put(i + "", object );
                 i++;
-
-                System.out.println("value:" +object.toString());
             }
-
             Map<String, Object> myparam = new HashMap<>();
             String redisScore = redisTemplate.opsForValue().get(tbUser.getId()+"")+"";
             String nickName = redisTemplate.opsForValue().get(tbUser.getId() +"nickName")+"";
@@ -140,6 +131,8 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
             myparam.put("myscore", reparam );
             myparam.put("scoreList", param);
             return  myparam;
+        } else {
+            logger.info("【TbUserScoreLogServiceImp】【saveUserScore】 没有找到该rdSessionKey下的用户信息， rdSessionKey = " + rdSessionKey);
         }
         return null;
     }

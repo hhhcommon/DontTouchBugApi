@@ -5,7 +5,6 @@ import com.zhengshun.touch.api.common.context.Constant;
 import com.zhengshun.touch.api.common.util.ServletUtils;
 import com.zhengshun.touch.api.common.web.controller.BaseController;
 import com.zhengshun.touch.api.service.BuriedPointMongoService;
-import org.apache.batik.dom.util.HashTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -47,13 +46,13 @@ public class BuriedPointController extends BaseController{
         int ret = buriedPointMongoService.save( appId, key, data, timestamp, rdSessionKey, sub );
 //        int ret = 1;
         if (ret == 0){
-            LOGGER.info("【/api/buriedPoint/add.htm】 success ");
+            LOGGER.info("【/api/buriedPoint/add.htm】 埋点写入成功， rdSessionKey = " + rdSessionKey);
             Map<String,Object> result = new HashMap<String,Object>();
             result.put(Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE);
             result.put(Constant.RESPONSE_CODE_MSG, MsgUtils.OPERATE_SUCCESS_MSG);
             ServletUtils.writeToResponse(response,result);
         }else{
-            LOGGER.info("【/api/buriedPoint/add.htm】 failed ");
+            LOGGER.info("【/api/buriedPoint/add.htm】 埋点写入失败， 未找到用户， rdSessionKey = " + rdSessionKey);
             Map<String,Object> result = new HashMap<String,Object>();
             result.put(Constant.RESPONSE_CODE, Constant.FAIL_CODE_VALUE);
             result.put(Constant.RESPONSE_CODE_MSG, MsgUtils.OPERATE_FAIL_MSG);
