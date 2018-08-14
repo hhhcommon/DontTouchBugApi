@@ -125,8 +125,8 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
             reparam.put("avatarUrl", avatarUrl );
             reparam.put("score", redisScore );
 
-            Long rank = redisTemplate.opsForZSet().rank("scorerank", JSONObject.fromObject(reparam).toString());
-            reparam.put("rank", rank);
+            Long rank = redisTemplate.opsForZSet().reverseRank("scorerank", JSONObject.fromObject(reparam).toString());
+            reparam.put("rank", rank+1);
 
             myparam.put("myscore", reparam );
             myparam.put("scoreList", param);
