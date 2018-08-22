@@ -49,6 +49,29 @@ public class TbUserScoreLogController extends BaseController {
 
 
     }
+
+    @RequestMapping( value = "/api/user/score/1.1.0/save.htm" )
+    public void saveUserStars (
+            @RequestParam( value = "rdSessionKey") String rdSessionKey,
+            @RequestParam( value = "score") BigDecimal score,
+            @RequestParam( value = "time") Integer time,
+            @RequestParam( value = "difficut") Integer difficut,
+            @RequestParam( value = "steps") String steps,
+            @RequestParam( value = "stars", required = false ) Integer stars)
+            throws Exception {
+        logger.info( "【/api/user/score/1.1.0/save.htm】【inputs】 userId = " + rdSessionKey + ", score = " + score + ", difficut = " + difficut + ", steps =" + steps + ", stars =" + stars);
+
+        if (tbUserScoreLogService.saveUserStars( rdSessionKey, score, time, difficut, steps, stars)) {
+            logger.info("【/api/user/score/1.1.0/save.htm】【outputs】 rdSessionKey = " + rdSessionKey + " 操作成功");
+            ServletUtils.writeToResponse(response, BaseResponse.success());
+        } else {
+            logger.info("【/api/user/score/1.1.0/save.htm】【outputs】 rdSessionKey = " + rdSessionKey + " 操作失败");
+            ServletUtils.writeToResponse( response, BaseResponse.fail() );
+        }
+
+
+    }
+
     @RequestMapping( value = "/api/user/score/rank.htm" )
     public void getrank (
             @RequestParam( value = "rdSessionKey") String rdSessionKey)
@@ -63,6 +86,25 @@ public class TbUserScoreLogController extends BaseController {
         retMap.put( Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE );
         retMap.put( Constant.RESPONSE_CODE_MSG, MsgUtils.OPERATE_SUCCESS_MSG);
         logger.info( "【/api/game/type/get.htm】【outputs】 " + ConvertUtils.convert( retMap ) );
+        ServletUtils.writeToResponse( response, retMap );
+
+
+    }
+
+    @RequestMapping( value = "/api/user/stars/rank.htm" )
+    public void getStarsRank (
+            @RequestParam( value = "rdSessionKey") String rdSessionKey)
+            throws Exception {
+        logger.info( "【/api/user/stars/rank.htm】【inputs】   rdSessionKey = " + rdSessionKey );
+
+        Map<String, Object> list = tbUserScoreLogService.getStarsRank( rdSessionKey );
+
+        Map<String, Object> retMap = new HashMap<>();
+
+        retMap.put( Constant.RESPONSE_DATA, list );
+        retMap.put( Constant.RESPONSE_CODE, Constant.SUCCEED_CODE_VALUE );
+        retMap.put( Constant.RESPONSE_CODE_MSG, MsgUtils.OPERATE_SUCCESS_MSG);
+        logger.info( "【/api/user/stars/rank.htm】【outputs】 " + ConvertUtils.convert( retMap ) );
         ServletUtils.writeToResponse( response, retMap );
 
 

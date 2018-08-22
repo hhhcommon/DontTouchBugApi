@@ -7,8 +7,6 @@ import com.zhengshun.touch.api.mapper.TbUserMapper;
 import com.zhengshun.touch.api.mapper.TbUserScoreLogMapper;
 import com.zhengshun.touch.api.domain.TbUserScoreLog;
 import com.zhengshun.touch.api.service.TbUserScoreLogService;
-import groovy.lang.Lazy;
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +97,65 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
         return false;
     }
 
+
+    @Override
+    public Boolean saveUserStars(String rdSessionKey, BigDecimal score, Integer time, Integer difficut, String steps,
+        Integer stars ) {
+        TbUserScoreLog tbUserScoreLog = new TbUserScoreLog();
+        tbUserScoreLog.setScore( score );
+        tbUserScoreLog.setTime( time );
+        tbUserScoreLog.setDifficut( difficut );
+        tbUserScoreLog.setSteps( steps );
+        tbUserScoreLog.setStars( stars );
+        tbUserScoreLog.setCreateDate( new Date());
+        Map<String, Object> params = new HashMap<>();
+        params.put("rdSessionKey", rdSessionKey );
+        TbUser tbUser = tbUserMapper.findSelective(params);
+        if ( tbUser != null ) {
+
+            tbUserScoreLog.setUserId( tbUser.getId() );
+            String redisUserValue = redisTemplate.opsForValue().get( "userId = " + tbUser.getId() + "" ) + "";
+            logger.info("【TbUserScoreLogServiceImp】【saveUserStars】 key = " + " userId = " + tbUser.getId() + ", " +
+                    "redisUserValue = " + redisUserValue);
+            Map<String, Object> paramRedis = new HashMap<>();
+            paramRedis.put("nickName", tbUser.getNickName() );
+            paramRedis.put("avatarUrl", tbUser.getAvatarUrl() );
+            paramRedis.put("stars", stars + "" );
+            if ( redisUserValue != null && !redisUserValue.equals("null")) {
+                JSONObject jsonObject = JSONObject.fromObject( redisUserValue );
+                if ( stars.doubleValue() > jsonObject.getDouble("stars")) {
+                    Map<String, Object> reparam = new HashMap<>();
+                    reparam.put("nickName", jsonObject.getString("nickName") );
+                    reparam.put("avatarUrl", jsonObject.getString("avatarUrl")  );
+                    reparam.put("stars", jsonObject.getDouble("stars") );
+                    logger.info("【TbUserScoreLogServiceImp】【saveUserStars】 当前用户缓存值 : " + JSONObject.fromObject(reparam).toString());
+                    logger.info("【TbUserScoreLogServiceImp】【saveUserStars】 当前星星大于缓存星星， 清除缓存星星 start userId = " +
+                            tbUser.getId());
+                    redisTemplate.opsForZSet().remove("starsrank", JSONObject.fromObject(reparam).toString() );
+                    logger.info("【TbUserScoreLogServiceImp】【saveUserScore】 当前星星大于缓存星星， 清除缓存星星 end userId = " +
+                            tbUser.getId());
+
+                    redisTemplate.opsForValue().set("userId = " + tbUser.getId() + "", JSONObject.fromObject(paramRedis).toString() );
+                    redisTemplate.opsForZSet().add("starsrank", JSONObject.fromObject(paramRedis).toString(), stars.doubleValue() );
+                }
+
+            } else {
+                redisTemplate.opsForValue().set("userId = " + tbUser.getId() + "",  JSONObject.fromObject(paramRedis).toString() );
+                redisTemplate.opsForZSet().add("starsrank", JSONObject.fromObject(paramRedis).toString(), stars.doubleValue() );
+            }
+            int res = tbUserScoreLogMapper.insert( tbUserScoreLog );
+            if ( res > 0 ) {
+                return true;
+            }
+        } else {
+            logger.info("【TbUserScoreLogServiceImp】【saveUserStars】 没有找到该rdSessionKey下的用户信息， rdSessionKey = " + rdSessionKey);
+        }
+
+        return false;
+    }
+
+
+
     @Override
     public Map<String, Object> getRank(String rdSessionKey) {
         logger.info("【TbUserScoreLogServiceImp】【getRank】 当前排行 : " + redisTemplate.opsForZSet().reverseRange("scorerank", 0, 20));
@@ -133,6 +190,43 @@ public class TbUserScoreLogServiceImp extends BaseServiceImpl<TbUserScoreLog, Lo
             return  myparam;
         } else {
             logger.info("【TbUserScoreLogServiceImp】【saveUserScore】 没有找到该rdSessionKey下的用户信息， rdSessionKey = " + rdSessionKey);
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getStarsRank(String rdSessionKey) {
+        logger.info("【TbUserScoreLogServiceImp】【getStarsRank】 当前排行 : " + redisTemplate.opsForZSet().reverseRange
+                ("starsrank", 0, 20));
+        Map<String, Object> params = new HashMap<>();
+        params.put("rdSessionKey", rdSessionKey );
+        TbUser tbUser = tbUserMapper.findSelective(params);
+        if ( tbUser != null ) {
+            Set<Object> tuples1 = redisTemplate.opsForZSet().reverseRange("starsrank",0,20);
+            Iterator<Object> iterator = tuples1.iterator();
+            int i = 1;
+            Map<String, Object> param = new HashMap<>();
+            while (iterator.hasNext())
+            {
+                Object object  = iterator.next();
+                param.put(i + "", object );
+                i++;
+            }
+            Map<String, Object> myparam = new HashMap<>();
+            String redisUserValue = redisTemplate.opsForValue().get("userId = " + tbUser.getId() + "")+"";
+            JSONObject jsonObject = JSONObject.fromObject( redisUserValue );
+            Map<String, Object> reparam = new HashMap<>();
+            reparam.put("nickName", jsonObject.get("nickName") );
+            reparam.put("avatarUrl", jsonObject.get("avatarUrl") );
+            reparam.put("stars", jsonObject.get("stars") );
+            Long rank = redisTemplate.opsForZSet().reverseRank("starsrank", redisUserValue );
+            reparam.put("rank", rank+1);
+
+            myparam.put("mystars", reparam );
+            myparam.put("starsList", param);
+            return  myparam;
+        } else {
+            logger.info("【TbUserScoreLogServiceImp】【getStarsRank】 没有找到该rdSessionKey下的用户信息， rdSessionKey = " + rdSessionKey);
         }
         return null;
     }

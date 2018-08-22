@@ -57,6 +57,8 @@ public class TbUserScoreLog implements Serializable {
      */
     private Date updateDate;
 
+    private Integer stars;
+
     private Integer time;
 
     public Integer getTime() {
@@ -146,5 +148,13 @@ public class TbUserScoreLog implements Serializable {
 
     public void setSteps(String steps) {
         this.steps = steps;
+    }
+
+    public Integer getStars() {
+        return stars;
+    }
+
+    public void setStars(Integer stars) {
+        this.stars = stars;
     }
 }

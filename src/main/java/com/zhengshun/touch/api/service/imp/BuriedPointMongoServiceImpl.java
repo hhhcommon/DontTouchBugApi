@@ -44,7 +44,8 @@ public class BuriedPointMongoServiceImpl implements BuriedPointMongoService {
      * @see com.roomdis.center.mongo.service.IBuzzElementService#save(com.roomdis.center.mongo.model.BuzzElement)
      */
     @Override
-    public int save(String appId, String key, String data, Long timestamp, String rdSessionKey, String sub) throws
+    public int save(String appId, String key, String data, Long timestamp, String rdSessionKey, String sub, String
+            version) throws
             Exception {
 
         Map<String, Object> params = new HashMap<>();
@@ -61,7 +62,7 @@ public class BuriedPointMongoServiceImpl implements BuriedPointMongoService {
             buriedPoint.setDeleteFlag( 0 );
             buriedPoint.setUpdateDate( new Date() );
             buriedPoint.setSub( sub );
-
+            buriedPoint.setVersion( version );
             JSONObject jsonObject = JSONObject.parseObject( data );
             Map<String,String> map = (Map)jsonObject;
 

@@ -39,11 +39,13 @@ public class BuriedPointController extends BaseController{
             @RequestParam(value = "data") String data,
             @RequestParam(value = "rdSessionKey") String rdSessionKey,
             @RequestParam(value = "timestamp") Long timestamp,
-            @RequestParam(value = "sub") String sub) throws Exception {
+            @RequestParam(value = "sub") String sub,
+            @RequestParam(value = "version", required = false) String version) throws Exception {
         LOGGER.info( "【/api/buriedPoint/add.htm】" + "appId = " + appId + ", key = " + key + ", data = " + data + ", " +
-                "rdSessionKey = " + rdSessionKey + ", timestamp = " + rdSessionKey + ", sub = " + sub);
+                "rdSessionKey = " + rdSessionKey + ", timestamp = " + rdSessionKey + ", sub = " + sub + ", version = " +
+                "" + version);
 
-        int ret = buriedPointMongoService.save( appId, key, data, timestamp, rdSessionKey, sub );
+        int ret = buriedPointMongoService.save( appId, key, data, timestamp, rdSessionKey, sub , version);
 //        int ret = 1;
         if (ret == 0){
             LOGGER.info("【/api/buriedPoint/add.htm】 埋点写入成功， rdSessionKey = " + rdSessionKey);

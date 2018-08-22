@@ -14,6 +14,7 @@
         <result column="game_type_id" jdbcType="INTEGER" property="gameTypeId" />
         <result column="difficut" jdbcType="INTEGER" property="difficut" />
         <result column="steps" jdbcType="VARCHAR" property="steps" />
+        <result column="stars" jdbcType="INTEGER" property="stars" />
         <result column="status" jdbcType="INTEGER" property="status" />
         <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
         <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -56,6 +57,9 @@
             <if test="steps != null">
                 steps,
             </if>
+            <if test="stars != null">
+                stars,
+            </if>
             <if test="status != null">
                 status,
             </if>
@@ -83,6 +87,9 @@
             </if>
             <if test="steps != null">
                 #{steps,jdbcType=VARCHAR},
+            </if>
+            <if test="stars != null">
+                #{stars,jdbcType=INTEGER},
             </if>
             <if test="gameTypeId != null">
                 #{gameTypeId,jdbcType=INTEGER},

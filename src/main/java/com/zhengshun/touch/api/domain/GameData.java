@@ -1,44 +1,28 @@
 package com.zhengshun.touch.api.domain;
 
-import org.apache.batik.dom.util.HashTable;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
- * 埋点
+ * 游戏数据
  */
 
-@Document(collection="buried_point")
-public class BuriedPoint implements Serializable {
+@Document(collection="game_data")
+public class GameData implements Serializable {
 
     @Field(value="id")
     private Long id;
 
     @Field(value="user_id")
     private Long userId;
-
-    @Field(value="app_id")
-    private String appId;
-
-    @Field(value="key")
-    private String key;
-
-
-    @Field(value="data")
-    private Map<String, String> data;
-
-    @Field(value="sub")
-    private String sub;
-    /**
-     * 点击时间
-     */
-    @Field(value="timestamp")
-    private Date timestamp;
+    @Field(value="schedule_data")
+    private Map<String, String> scheduleData;
+    @Field(value="card_data")
+    private Map<String, String> cardData;
     @Field(value="status")
     private Integer status;
     @Field(value="delete_flag")
@@ -68,15 +52,6 @@ public class BuriedPoint implements Serializable {
         this.userId = userId;
     }
 
-
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public Integer getStatus() {
         return status;
@@ -118,36 +93,20 @@ public class BuriedPoint implements Serializable {
         this.updateDate = updateDate;
     }
 
-    public String getAppId() {
-        return appId;
+    public Map<String, String> getScheduleData() {
+        return scheduleData;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
+    public void setScheduleData(Map<String, String> scheduleData) {
+        this.scheduleData = scheduleData;
     }
 
-    public String getKey() {
-        return key;
+    public Map<String, String> getCardData() {
+        return cardData;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public Map<String, String> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, String> data) {
-        this.data = data;
-    }
-
-    public String getSub() {
-        return sub;
-    }
-
-    public void setSub(String sub) {
-        this.sub = sub;
+    public void setCardData(Map<String, String> cardData) {
+        this.cardData = cardData;
     }
 
     public String getVersion() {
